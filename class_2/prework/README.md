@@ -7,3 +7,4 @@ For today's prework, you'll setup a vector database. This will be useful as we t
 Complete the following:
 
 - [Setting up a Vector Database with Pinecone](prework_1.md)
+- [Prepping Your Environment for Class 2](../class_code/README.md)

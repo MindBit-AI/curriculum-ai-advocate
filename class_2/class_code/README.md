@@ -1,3 +1,5 @@
+# Prepping Your Environment for Class 2
+
 For today's class, you'll want to be sure your environment is set up properly.
 
 Open your terminal and go to this project's root directory (curriculum_ai_advocate).
@@ -17,7 +19,7 @@ source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
 
-3. Now go to navigate to `class_2/class_code` and run `embeddings_example.py`:
+3. Now navigate to `class_2/class_code` and run `embeddings_example.py`:
 
 ```
 cd class_2/class_code
