@@ -1,5 +1,5 @@
 from langchain_community.vectorstores import Pinecone
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.document_loaders import DirectoryLoader, TextLoader, WebBaseLoader
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -7,6 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import SystemMessage, HumanMessage
 
 embedding = OpenAIEmbeddings(model='text-embedding-3-small')
+index_name = "berkshire-hathaway-class"
 
 def load_documents():
     loader = DirectoryLoader("./", glob="**/letters/*.txt", loader_cls=TextLoader)
@@ -33,36 +34,38 @@ def create_summaries(docs):
                 HumanMessage(content=doc.page_content)
             ]
         summary = llm.invoke(messages)
-        print(summary.content)
+        doc.page_content = summary.content
 
 def embed_documents(docs, namespace):
     "embed documents and place them in the vector store"
     PineconeVectorStore.from_documents(
-        documents=docs, 
-        embedding=embedding, 
-        index_name='berkshire-hathaway',
+        documents=docs,
+        embedding=embedding,
+        index_name=index_name,
         namespace=namespace
     )
 
 def search_document_chunks(query, namespace):
-    vector_store = PineconeVectorStore(index_name='berkshire-hathaway', embedding=embedding)
+    vector_store = PineconeVectorStore(index_name=index_name, embedding=embedding)
     docs = vector_store.similarity_search_with_score(query=query, k=5, namespace=namespace)
     return docs
-
 
 
 if __name__ == "__main__":
     # Load chunks
     docs = load_documents()
-    summaries = create_summaries([docs[0]])
-    # embed_documents(docs=summaries, namespace="summaries")
-    
+
+    #Chunks
     # chunks = chunk_documents(docs=docs)
     # embed_documents(docs=chunks, namespace="chunks")
 
+    #Summaries
+    create_summaries(docs)
+    embed_documents(docs=docs, namespace="summaries")
+
     # user_query = "When did Berkshire Hathaway purchase it's first coke stock?" # should return 1988
     # user_query = "What stocks did Bershire Hathaway have in 1992?" # Will struggle to return this
-    # docs_and_scores = search_document_chunks(query=user_query, namespace="")
+    # docs_and_scores = search_document_chunks(query=user_query, namespace="chunks")
     # docs = []
     # for doc, score in docs_and_scores:
     #     print(score)

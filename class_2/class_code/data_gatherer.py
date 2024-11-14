@@ -23,7 +23,7 @@ def search_documents(query, namespace):
     pass
 
 if __name__ == "__main__":
-
+    pass
 
     # prompt_template = ChatPromptTemplate.from_messages([
     #     (
