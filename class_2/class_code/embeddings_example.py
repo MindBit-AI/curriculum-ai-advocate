@@ -4,3 +4,5 @@ texts = [
     "The Godfather is a classic mafia crime drama",
     "Inception explores dreams within dreams"
 ]
+
+print(texts)

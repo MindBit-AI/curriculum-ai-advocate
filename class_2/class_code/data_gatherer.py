@@ -16,9 +16,11 @@ def chunk_documents(docs):
 
 def embed_documents(docs, namespace):
     "Embed documents and place them in the vector store"
+    pass
 
 def search_documents(query, namespace):
     "Search the vector store with the user query"
+    pass
 
 if __name__ == "__main__":
 
