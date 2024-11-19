@@ -1,1 +1,1 @@
-Coming soon! 
+No prework for this class.
