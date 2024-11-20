@@ -8,7 +8,7 @@ from langchain_core.messages import SystemMessage, HumanMessage
 
 def load_documents():
     "Load all text documents from the letters directory."
-    loader = DirectoryLoader("./", glob="**/letters/*.txt", loader_cls=TextLoader)
+    loader = DirectoryLoader("./", glob="class_2/class_code/letters/*.txt", loader_cls=TextLoader)
     docs = loader.load()
 
     print(f"Found {len(docs)} letters")
@@ -36,8 +36,6 @@ def embed_documents(docs, namespace):
         namespace=namespace
     )
 
-
-
 def search_documents(query, namespace):
     "Search the vector store with the user query"
     vector_store = PineconeVectorStore(index_name=index_name, embedding=embedding)
@@ -46,31 +44,42 @@ def search_documents(query, namespace):
 
 
 if __name__ == "__main__":
+    # Step 1: Load document embeddings (the array of numbers) into Pinecone - only run this the first time
     # docs = load_documents()
     # chunks = chunk_documents(docs=docs)
     # embed_documents(docs=chunks, namespace="chunks")
-    user_query = "When did Berkshire Hathaway purchase it's first coke stock?" # should return 1988
+
+    # Step 2: Write a query
+    user_query = "When did Berkshire Hathaway purchase it's first coke stock?" # Year: 1988
+
+    # Step 3: Check Pinecone for similar chunks
     docs_and_scores = search_documents(query=user_query, namespace="chunks")
     docs = []
     for doc, score in docs_and_scores:
         print(score)
         print(doc.metadata)
         docs.append(doc.page_content)
-    # prompt_template = ChatPromptTemplate.from_messages([
-    #     (
-    #         "system", 
-    #         """Provide an answer to the user's query about Berkshire Hathaway.
-    #             Documents from the Berkshire Hathaway shareholder meetings will be provided.
-    #             Use those documents to best answer the question.
-    #         """
-    #     ),
-    #     (
-    #         "system",
-    #         "Documents: {docs}"
-    #     ),
-    #     (
-    #         "user",
-    #         "{query}"
-    #     )
-    # ])
-    # prompt = prompt_template.invoke({"docs": docs, "query": user_query})
+    
+    # Step 4: Put docs into prompt and send to ChatGPT
+    prompt_template = ChatPromptTemplate.from_messages([
+        (
+            "system", 
+            """Provide an answer to the user's query about Berkshire Hathaway.
+                Documents from the Berkshire Hathaway shareholder meetings will be provided.
+                Use those documents to best answer the question.
+            """
+        ),
+        (
+            "system",
+            "Documents: {docs}"
+        ),
+        (
+            "user",
+            "{query}"
+        )
+    ])
+    prompt = prompt_template.invoke({"docs": docs, "query": user_query})
+
+    llm = ChatOpenAI(model="gpt-4o-mini")
+    response = llm.invoke(prompt)
+    print(response.content)
