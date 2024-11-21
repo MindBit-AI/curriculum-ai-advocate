@@ -1,19 +1,27 @@
 # MindBit's AI Advocate Course
 
-Welcome to the course! If you're looking for everything you need to complete this course, you've come to the right place. All course material links that you'll need are listed below. 
+## Building Your Future in Artificial Intelligence
 
-For each class, you'll have:
-1. Prework - this is to be done before class and should take about 10-20 minutes
-2. Class Materials - This is the material we'll use in class. You can puruse it at your leasure.
+Welcome to MindBit's AI Advocate Course! This program will equip you with the knowledge and skills needed to become an effective AI advocate in your organization. This document contains all the essential materials and links you'll need to successfully complete the course.
 
-## Class Links
+### Course Structure
 
+Each class consists of two components:
 
-### Course Prework (do this first)
+- **Prework**: 10-20 minutes of preparation material to be completed before each class
+- **Class Materials**: Core content covered during the 1-hour class
 
-- [To-do List Before Your First Class](./precourse_work/README.md)
-- [AI Project Ideas](./precourse_work/ai_project_ideas.md)
-- [AI Project Planning Document](./precourse_work/ai_project_planning_doc.md)
+## Getting Started
+
+### Required Precourse Work
+
+Complete these items before your first class:
+
+- 📋 [Essential Pre-class Checklist](./precourse_work/README.md) - Setup and preparation steps
+- 💡 [AI Project Ideas Gallery](./precourse_work/ai_project_ideas.md) - Inspiration for your course project
+- 📝 [Project Planning Template](./precourse_work/ai_project_planning_doc.md) - Framework for developing your project
+
+## Class Schedule and Materials
 
 ### Class 1
 1. [Prework](./class_1/prework)
