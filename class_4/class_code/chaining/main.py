@@ -18,5 +18,6 @@ parser = StrOutputParser()
 
 # New way! Chaining!
 chain = prompt_template | model | parser
-result = chain.invoke({"adjective": "funny"})
+result = chain.invoke({"adjective": "funny car"})
+print(f"Chain: {chain}")
 print(result)

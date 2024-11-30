@@ -39,8 +39,8 @@ Label this as high priority and website maintenance.
 """
 
 trello_card = chain.invoke({"task_description": task_description})
-print(trello_card)
-print(type(trello_card))
+print(f"Trello card: {trello_card}")
+print(f"Object type: {type(trello_card)}")
 
 trello_helper = TrelloHelper()
 trello_helper.create_card(trello_card.name, trello_card.desc, trello_card.labels)

@@ -10,13 +10,13 @@ class Recipe(BaseModel):
     """
     Use this model when working with complete cooking recipes.
     """
-    title: str = Field(title="title", description="Name of the recipe")
-    ingredients: List[str] = Field(title="ingredients", description="List of ingredients needed for the recipe")
-    instructions: List[str] = Field(title="instructions", description="Step-by-step instructions to prepare the recipe")
+    title: str = Field(description="Name of the recipe")
+    ingredients: List[str] = Field(description="List of ingredients needed for the recipe")
+    instructions: List[str] = Field(description="Step-by-step instructions to prepare the recipe")
 
 # Initialize model and parser
 model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-structured_model = model.with_structured_output(Recipe)
+structured_model = model.with_structured_output(RecipeDoc)
 
 # Create prompt template with chaining syntax
 prompt = ChatPromptTemplate.from_messages([
@@ -29,7 +29,7 @@ chain = prompt | structured_model
 
 # Load and process recipe
 if __name__ == "__main__":
-    loader = TextLoader("class_4/class_code/recipe/syrup.txt")
+    loader = TextLoader("class_4/class_code/recipe/recipe_doc.txt")
     doc = loader.load()
     recipe_text = doc[0].page_content
     structured_recipe = chain.invoke({"recipe_text": recipe_text})
