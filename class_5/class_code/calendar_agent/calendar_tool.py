@@ -9,18 +9,18 @@ from googleapiclient.errors import HttpError
 from langchain_openai import ChatOpenAI
 from datetime import datetime, timedelta
 import pytz
-import json
-from typing import Dict, Any, List
+from typing import List
 from langchain.agents import Tool
 from langchain.tools import tool
+from langchain.pydantic_v1 import BaseModel, Field
 
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
-
-credentials_path = "token.json"
 timezone = "America/Denver"
-openai_client = ChatOpenAI(model="gpt-4o-mini")
 
-def refresh_google_auth():
+# Initialize the LLM
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+
+def get_google_calendar_service():
+    SCOPES = ["https://www.googleapis.com/auth/calendar"]
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -39,17 +39,49 @@ def refresh_google_auth():
         # Save the credentials for the next run
         with open("token.json", "w") as token:
             token.write(creds.to_json())
-    return creds
+    return build('calendar', 'v3', credentials=creds)
 
+class CalendarEvent(BaseModel):
+    """Schema for a calendar event."""
+    summary: str = Field(..., description="The title of the event")
+    start_time: str = Field(..., description="The start time in ISO format (YYYY-MM-DDTHH:MM:SS)")
+    duration_minutes: int = Field(..., description="Duration of the event in minutes")
+    description: str = Field("", description="Optional description of the event")
 
-@tool("check_calendar_availability")
+@tool # Main Task
+def create_calendar_event(event: CalendarEvent) -> str:
+    """Create a new calendar event."""
+    try:
+        service = get_google_calendar_service()
+
+        start_datetime = datetime.fromisoformat(event.start_time).astimezone(pytz.timezone(timezone))
+        end_datetime = start_datetime + timedelta(minutes=event.duration_minutes)
+
+        event_body = {
+            'summary': event.summary,
+            'description': event.description,
+            'start': {
+                'dateTime': start_datetime.isoformat(),
+                'timeZone': timezone,
+            },
+            'end': {
+                'dateTime': end_datetime.isoformat(),
+                'timeZone': timezone,
+            },
+        }
+
+        event = service.events().insert(calendarId='primary', body=event_body).execute()
+        return f"Event '{event['summary']}' has been created for {start_datetime.strftime('%Y-%m-%d %H:%M')}."
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return f"Failed to create the event due to an error: {error}"
+
+@tool # Context
 def check_calendar_availability(start_time: str, duration_minutes: int) -> bool:
     """Check if a given time slot is available in the calendar."""
     try:
-        creds = refresh_google_auth()
-        service = build('calendar', 'v3', credentials=creds)
+        service = get_google_calendar_service()
 
-        # Parse the input start_time and convert it to UTC
         start_datetime = datetime.fromisoformat(start_time).astimezone(pytz.timezone(timezone))
         end_datetime = start_datetime + timedelta(minutes=duration_minutes)
 
@@ -67,91 +99,10 @@ def check_calendar_availability(start_time: str, duration_minutes: int) -> bool:
         print(f"An error occurred: {error}")
         return False  # Assume not available in case of error
 
-@tool("extract_calendar_info")
-def extract_calendar_info(text: str) -> Dict[str, Any]:
-    """Extract calendar event information from user input."""
-    functions = [
-        {
-            "name": "create_calendar_event",
-            "description": "Create a new calendar event",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "summary": {"type": "string", "description": "The title of the event"},
-                    "start_time": {"type": "string", "description": "The start time of the event in ISO format (YYYY-MM-DDTHH:MM:SS)"},
-                    "duration_minutes": {"type": "integer", "description": "The duration of the event in minutes"},
-                    "description": {"type": "string", "description": "Optional description of the event"}
-                },
-                "required": ["summary", "start_time", "duration_minutes"]
-            }
-        }
-    ]
-
-    response = openai_client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant that extracts calendar event information from user input."},
-            {"role": "user", "content": text}
-        ],
-        functions=functions,
-        function_call={"name": "create_calendar_event"}
-    )
-
-    function_call = response.choices[0].message.function_call
-    return function_call
-
-@tool("create_calendar_event")
-def create_calendar_event(summary: str, start_time: str, duration_minutes: int, description: str = "") -> str:
-    """Create a new calendar event."""
-    try:
-        creds = refresh_google_auth()
-        service = build('calendar', 'v3', credentials=creds)
-
-        start_datetime = datetime.fromisoformat(start_time).astimezone(pytz.timezone(timezone))
-        end_datetime = start_datetime + timedelta(minutes=duration_minutes)
-
-        event = {
-            'summary': summary,
-            'description': description,
-            'start': {
-                'dateTime': start_datetime.isoformat(),
-                'timeZone': timezone,
-            },
-            'end': {
-                'dateTime': end_datetime.isoformat(),
-                'timeZone': timezone,
-            },
-        }
-
-        event = service.events().insert(calendarId='primary', body=event).execute()
-        return f"Event '{summary}' has been created for {start_datetime.strftime('%Y-%m-%d %H:%M')}."
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-        return f"Failed to create the event due to an error: {error}"
-
-@tool("calendar_event_tool")
-def calendar_event_tool(text: str) -> str:
-    """Process user input to create a calendar event or suggest alternatives."""
-    event_info = extract_calendar_info(text)
-    if event_info:
-        if event_info['is_available']:
-            result = create_calendar_event(
-                event_info['summary'],
-                event_info['start_time'],
-                event_info['duration_minutes'],
-                event_info.get('description', '')
-            )
-            return result
-        else:
-            return f"The requested time is not available. Here are some alternative suggestions:\n{event_info['alternative_suggestions']}"
-    else:
-        return "Sorry, I couldn't extract the necessary information to create a calendar event."
-
 def get_calendar_tools() -> List[Tool]:
-    """Get a list of all available tools in this class."""
+    """Get a list of all available tools."""
     return [
         check_calendar_availability,
-        extract_calendar_info,
         create_calendar_event
     ]
     
