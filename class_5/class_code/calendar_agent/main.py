@@ -1,6 +1,6 @@
 from datetime import datetime
 from langchain_openai import ChatOpenAI
-from calendar_tool import get_calendar_tools, refresh_google_auth
+from calendar_tool import get_calendar_tools, get_google_calendar_service
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.agents.format_scratchpad.openai_tools import (
     format_to_openai_tool_messages,
@@ -12,7 +12,7 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 tools = get_calendar_tools()
 llm_with_tools = llm.bind_tools(tools)
 
-refresh_google_auth()
+get_google_calendar_service()
 
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -44,10 +44,10 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 list(agent_executor.stream(
     {
-        "input": "Schedule my workout schedule this afternoon with a run, weights, and yoga", 
+        "input": "I need to find time for a taste testing meeting with the marketing team today. Aftewards, schedule an appointment with the pediatrician.", 
         "today": datetime.now().isoformat(),
     })
 )
         # "input": "I need a brainstorming meeting this afternoon. Anytime would work, I just need 30 minutes. Schedule the first available time.", 
         # "input": "Schedule time at 1 pm for 1 hour to brainstorm awesome ideas", 
-        # "input": "I need to find time for a taste testing meeting with the marketing team today. Aftewards, schedule an appointment with the pediatrician.", 
+        # "input": "I need to find time for a taste testing meeting with the marketing team today. Aftewards, schedule an appointment with the pediatrician.",

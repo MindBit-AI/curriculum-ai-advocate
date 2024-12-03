@@ -12,12 +12,9 @@ import pytz
 from typing import List
 from langchain.agents import Tool
 from langchain.tools import tool
-from langchain.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 timezone = "America/Denver"
-
-# Initialize the LLM
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 def get_google_calendar_service():
     SCOPES = ["https://www.googleapis.com/auth/calendar"]
