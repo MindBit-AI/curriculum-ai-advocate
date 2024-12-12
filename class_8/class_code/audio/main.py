@@ -62,6 +62,19 @@ def transcribe_audio(audio_file_path):
         )
     return transcript.text
 
+def text_to_speech(text):
+    """Convert text to speech using OpenAI's TTS API"""
+    response = client.audio.speech.create(
+        model="tts-1",
+        voice="alloy",
+        input=text
+    )
+    
+    # Save to a temporary file
+    temp_output = open("output.mp3", "wb")
+    response.stream_to_file(temp_output.name)
+    return temp_output.name
+
 def main():
     try:
         while True:
@@ -73,14 +86,20 @@ def main():
             
             # 3. Transcribe audio
             transcript = transcribe_audio(temp_audio_file)
-
+            
+            # 4. Convert transcript back to speech
+            output_audio_file = text_to_speech(transcript)
+            
             print(transcript)
+            print(f"\nSaved response audio to: {output_audio_file}")
             
             print("\nPress Ctrl+C to stop")
             
-            # 6. Clean up temporary file
+            # Clean up temporary files
             os.remove(temp_audio_file)
+            # os.remove(output_audio_file)
             user_input = input("Do you want to record again? (yes/no - default yes): ").strip().lower()
+
             if user_input != 'yes' and user_input != '':
                 break
     except KeyboardInterrupt:
