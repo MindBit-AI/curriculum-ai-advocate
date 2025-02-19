@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Table Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .drop-zone.dragover {
+            background-color: #e1e1e1;
+            border-color: #999;
+        }
+        #csvOutput {
+            width: 100%;
+            height: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Table Extractor</h1>
+    
+    <div class="drop-zone" id="dropZone">
+        <p>Drag and drop a PDF file here or click to select</p>
+        <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+    </div>
+    
+    <button id="submitBtn" disabled>Extract Table</button>
+    
+    <textarea id="csvOutput" readonly placeholder="CSV output will appear here..."></textarea>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const csvOutput = document.getElementById('csvOutput');
+        let selectedFile = null;
+
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                handleFile(file);
+            }
+        });
+
+        // Handle click to select file
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        function handleFile(file) {
+            selectedFile = file;
+            dropZone.innerHTML = `Selected file: ${file.name}`;
+            submitBtn.disabled = false;
+        }
+
+        // Handle form submission
+        submitBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Processing...';
+                csvOutput.value = 'Processing...';
+
+                const response = await fetch('/extract-table', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    csvOutput.value = data.csv_data;
+                } else {
+                    csvOutput.value = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                csvOutput.value = `Error: ${error.message}`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Extract Table';
+            }
+        });
+    </script>
+</body>
+</html> 

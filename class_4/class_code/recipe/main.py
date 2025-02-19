@@ -1,10 +1,9 @@
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from langchain.output_parsers import PydanticOutputParser
 from langchain_community.document_loaders import TextLoader
-from structured_output import RecipeDoc
 from pydantic import BaseModel, Field
 from typing import List
+from pprint import pprint
 
 class Recipe(BaseModel):
     """
@@ -16,7 +15,7 @@ class Recipe(BaseModel):
 
 # Initialize model and parser
 model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-structured_model = model.with_structured_output(RecipeDoc)
+structured_model = model.with_structured_output(Recipe)
 
 # Create prompt template with chaining syntax
 prompt = ChatPromptTemplate.from_messages([
@@ -24,12 +23,15 @@ prompt = ChatPromptTemplate.from_messages([
     ("human", "Recipe text: {recipe_text}")
 ])
 
+# Gather recipe text
+with open("recipe_text_files/mac_and_cheese_recipe.txt", "r") as file:
+    recipe_text = file.read()
+
 # Create chain using the | operator
 chain = prompt | structured_model
+response = chain.invoke({"recipe_text": recipe_text})
+pprint(response)
 
-# Load and process recipe
-if __name__ == "__main__":
-    loader = TextLoader("class_4/class_code/recipe/recipe_doc.txt")
-    doc = loader.load()
-    recipe_text = doc[0].page_content
-    structured_recipe = chain.invoke({"recipe_text": recipe_text})
+print(response.title)
+print(response.ingredients[0])
+print(response.instructions[0])

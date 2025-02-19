@@ -8,17 +8,28 @@ def generate_response(review):
     """Generate a friendly response to a customer review"""
     try:
         # Create the prompt for OpenAI
+        # messages = [
+        #     {
+        #         "role": "system", 
+        #         "content": """You are a friendly customer service representative at a car dealership. 
+        #                       Keep responses professional, empathetic, and under 100 words."""
+        #     },
+        #     {
+        #         "role": "user", 
+        #         "content": f"Generate a response to this review: {review}"
+        #     }
+        # ]
         messages = [
-            {
-                "role": "system", 
-                "content": """You are a friendly customer service representative at a car dealership. 
-                              Keep responses professional, empathetic, and under 100 words."""
+            { 
+            "role": "system",
+            "content": "Extract the event information."
             },
             {
-                "role": "user", 
-                "content": f"Generate a response to this review: {review}"
+            "role": "user",
+            "content": "Alice and Bob are going to a science fair on Friday. What did Charlie do?"
             }
-        ]
+            ]
+
 
         # Get response from OpenAI
         response = client.chat.completions.create(
