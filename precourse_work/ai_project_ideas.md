@@ -1,27 +1,101 @@
-## Selecting Your AI Project
-A key component of this course is to build a project of your own choosing. This course is only four weeks long, so the project should be relatively simple. It is something you should be able to do based on your schedule in the four-week time period. The project doesn’t have to be a success, but it should give you enough to understand the various components and challenges of an AI project. 
+# Selecting Your AI Project
 
-Identifying a simple project that leverages AI can be challenging, but there's a lot of simple tasks that just couldn't be automated before that can with generative AI. A lot of “low hanging fruit” exists that you can build in this course that can add significant value to your work, and that's what we recommend you build (there's plenty to pick from!). 
+## Project Overview and Scope
 
-### Tips on finding a project
+Your AI project is a cornerstone of this four-week course. While the timeline is concise, it provides ample opportunity to explore AI's practical applications. Success isn't measured by perfect implementation, but by the insights gained into AI project development and deployment.
 
-Before we can pick a project, it's helpful to know what we should be looking for. What use cases make for good AI projects? Here are some helpful tips to finding these simple and effective projects that you can build during this class.
+### Understanding the Scope
 
-- Any task that requires a human to read something and act on what they read can be done by AI. Large language models are incredible at digesting unstructured text like blogs, code, contracts, emails, etc. 
-- AI needs context to do a task, so anything where you have information or data that can be used to complete a task gives you a big head start. Context can be data, examples of outputs, written-out processes, and more. Basically the more you can give a large language model today, the less context you’ll need to find today. 
-- Your AI project should not aim to do 100% of the work. Instead, a human should review the AI content before it is used. Focus on tasks that are low-energy tasks (e.g. reading 100 job applications to find the best candidates) and then let the human step in again.
-- Pick a use case you are familiar with. Avoid needing an “expert” to tell you what is right and what is wrong. You should be that person. That way you know how to guide the AI to do your bidding. 
+- **Timeline**: 4 weeks
+- **Complexity Level**: Beginner to intermediate
+- **Focus**: Practical implementation over theoretical perfection
+- **Goal**: Hands-on experience with AI implementation
 
-### Project Ideas
+## Finding Your Project Sweet Spot
 
-If you are having trouble identifying an AI use case you want to build towards, you can use the project list below as inspiration.
+The emergence of generative AI has unlocked numerous opportunities for automation that were previously impractical. We encourage focusing on these "low-hanging fruit" projects—tasks that offer significant value while remaining achievable within our timeframe.
 
-- Email/Slack summarizer and responder
-- Calendar generator
-- Data labeler
-Chatbot
-- Video transcript generator/summarizer/chapter generator
-- Meeting summarizer
-- Document generator
+### Ideal Project Characteristics
 
-By the beginning of our first class, you should have a good idea of what you want to build. We’ve provided a document with a few questions to help you flush out your idea so you can be set up for success on day 1. If you need help identifying your project idea, reach out to the Discord channel and we can help you brainstorm some ideas.
+1. **Text Processing Focus**
+   - Tasks involving reading and analyzing text
+   - Processing unstructured content (blogs, code, emails, contracts)
+   - Converting written information into structured outputs
+2. **Context Availability**
+   - Existing data sets or examples
+   - Documented processes
+   - Clear input-output relationships
+   - Historical examples or templates
+3. **Human-AI Collaboration**
+   - AI handles initial processing or draft creation
+   - Human provides final review and validation
+   - Focus on reducing repetitive, time-consuming tasks
+   - Maintain quality control through human oversight
+4. **Domain Familiarity**
+   - Choose projects within your area of expertise
+   - Leverage your knowledge for validation
+   - Avoid dependencies on external expert validation
+   - Enable direct assessment of AI outputs
+
+## Project Ideas and Examples
+
+### Communication Enhancement
+
+- **Email/Slack Manager**
+  - Auto-summarize long threads
+  - Draft contextual responses
+  - Prioritize messages by urgency
+
+### Content Generation
+
+- **Calendar Management**
+  - Generate scheduling suggestions
+  - Create event descriptions
+  - Optimize time blocks
+
+### Data Processing
+
+- **Automated Labeling**
+  - Categorize documents
+  - Tag content themes
+  - Organize information hierarchically
+
+### Interactive Systems
+
+- **Specialized Chatbots**
+  - Internal knowledge base assistant
+  - Customer service support
+  - Process guidance bot
+
+### Media Processing
+
+- **Video Content Management**
+  - Generate accurate transcripts
+  - Create content summaries
+  - Develop chapter markers
+  - Extract key points
+
+### Meeting Enhancement
+
+- **Meeting Intelligence**
+  - Create detailed summaries
+  - Extract action items
+  - Track decision points
+  - Generate follow-up tasks
+
+### Document Automation
+
+- **Smart Document Generation**
+  - Create templates
+  - Auto-populate fields
+  - Generate consistent formatting
+  - Ensure compliance with standards
+
+## Next Steps
+
+1. **Project Selection Deadline**: Have your project idea ready by the first class
+2. **Planning Support**: Use the provided project planning document to flesh out your concept
+3. **Community Resources**: Join our Discord channel for brainstorming and feedback
+4. **Documentation**: Begin gathering relevant examples and context for your chosen project
+
+Remember: The best project is one that aligns with your interests, expertise, and practical needs. Focus on creating value through automation while maintaining appropriate human oversight.
