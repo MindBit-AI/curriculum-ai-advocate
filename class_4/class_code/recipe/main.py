@@ -1,6 +1,5 @@
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from langchain_community.document_loaders import TextLoader
 from pydantic import BaseModel, Field
 from typing import List
 from pprint import pprint
