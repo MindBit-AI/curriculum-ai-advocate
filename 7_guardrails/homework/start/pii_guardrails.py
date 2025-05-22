@@ -28,8 +28,8 @@ class PIIGuardrail:
     def __init__(self):
         # Define regex patterns for common PII
         self.patterns = {
-            # Names (simplified - this would need refinement in real applications)
-            "name": r'\b(?:Mr\.|Mrs\.|Ms\.|Dr\.|Prof\.)?\s[A-Z][a-z]+\s[A-Z][a-z]+\b',
+            # TODO: Add your own pattern to detect names (e.g., "John Smith", "Dr. Jane Doe")
+            # Hint: Consider titles (Mr., Mrs., Ms., Dr., Prof.) and proper name capitalization
 
             # Email addresses
             "email": r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',
